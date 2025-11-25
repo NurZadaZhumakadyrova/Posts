@@ -1,8 +1,8 @@
-import UserCard from '@/components/carts/userCard.tsx';
-import { usePosts } from '@/useContext.ts';
+import UserCard from '@/components/cards/userCard.tsx';
+import { usePostContext } from '@/useContext.ts';
 
 const AllUsers = () => {
-  const { users } = usePosts();
+  const { users } = usePostContext();
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="ml-0 mb-12 sm:ml-16">

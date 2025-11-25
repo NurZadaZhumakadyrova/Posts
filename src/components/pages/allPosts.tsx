@@ -1,6 +1,6 @@
 import React from 'react';
 import type { IPost } from '@/types.ts';
-import PostCard from '@/components/carts/postCard.tsx';
+import PostCard from '@/components/cards/postCard.tsx';
 
 interface Props {
   posts: IPost[];

@@ -24,6 +24,8 @@ export interface ITodo {
   completed: boolean;
 }
 
+export type ApiTodo = Omit<ITodo, 'id'>;
+
 export interface IAlbum {
   userId: number;
   id: number;

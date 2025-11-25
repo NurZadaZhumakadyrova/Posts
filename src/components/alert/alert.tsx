@@ -8,6 +8,9 @@ interface Props {
   addComment?: boolean;
   editComment?: boolean;
   deleteComment?: boolean;
+  addTask?: boolean;
+  deleteTask?:boolean;
+  editTask?:boolean;
 }
 
 const AlertGlobal: React.FC<Props> = ({
@@ -17,6 +20,9 @@ const AlertGlobal: React.FC<Props> = ({
   addComment,
   editComment,
   deleteComment,
+  addTask,
+  deleteTask,
+  editTask,
 }) => {
   return (
     <div className="fixed bottom-6 right-6 z-[9999] animate-in slide-in-from-bottom-5 duration-700 fade-in-0">
@@ -44,6 +50,9 @@ const AlertGlobal: React.FC<Props> = ({
               {deleteComment && 'The comment was successfully deleted!'}
               {addComment && 'The comment was successfully added!'}
               {editComment && 'The comment was successfully edited!'}
+              {addTask && 'The task was successfully added!'}
+              {deleteTask && 'The task was successfully deleted!'}
+              {editTask && 'The task was successfully updated!'}
             </div>
           </div>
         </div>

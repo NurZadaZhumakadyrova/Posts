@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const UsersLayout: React.FC = () => {
   return (
-    <section className="min-h-screen pt-8 pb-16 px-8 [@media(min-width:600px)]:px-4 md:px-8 w-full">
+    <section className="min-h-screen pt-4 pb-8 px-4 [@media(min-width:640px)]:pt-8 [@media(min-width:640px)]:pb-16 [@media(min-width:640px)]:px-8 w-full">
       <Outlet />
     </section>
   );

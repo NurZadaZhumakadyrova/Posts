@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { ApiComment, IComment, IPost } from '@/types.ts';
-import { usePosts } from '@/useContext.ts';
+import { usePostContext } from '@/useContext.ts';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Spinner } from '@/components/ui/spinner';
 import { ChevronDown, ChevronUp, MessageCircle, Send } from 'lucide-react';
 import CommentForm from '@/components/forms/commentForm.tsx';
-import CommentCard from '@/components/carts/commentCard.tsx';
+import CommentCard from '@/components/cards/commentCard.tsx';
 import { getAuthorName, getInitials } from '@/globalConstans.ts';
 import AlertGlobal from '@/components/alert/alert.tsx';
 
@@ -20,7 +20,7 @@ const Post = () => {
   const [isAddCommentAlert, setIsAddCommentAlert] = useState<boolean>(false);
   const [isEditCommentAlert, setIsEditCommentAlert] = useState<boolean>(false);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
-  const { getPost, getComments, users, addComment, updateComment } = usePosts();
+  const { getPost, getComments, users, addComment, updateComment } = usePostContext();
   const { postId } = useParams();
 
   useEffect(() => {

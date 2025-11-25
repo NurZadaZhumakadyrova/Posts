@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import type {
   ApiComment,
-  ApiPost,
+  ApiPost, ApiTodo,
   IAlbum,
   IComment,
   IPhoto,
@@ -189,6 +189,44 @@ const PostsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, []);
 
+  const addTodo = useCallback(
+    async (todo: ApiTodo) => {
+      setLoading(true);
+      try {
+        await axiosAPI.post<ApiTodo>('/todos', {
+          ...todo,
+        });
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  const updateTodo = useCallback(async (todo: ITodo) => {
+    setLoading(true);
+    try {
+      await axiosAPI.put(`/todos/${todo.id}`, { ...todo });
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    }
+  }, []);
+
+  const deleteTodo = useCallback(async (todoId: number) => {
+    setLoading(true);
+    try {
+      await axiosAPI.delete(`/todos/${todoId}`);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <PostsContext.Provider
       value={{
@@ -206,6 +244,9 @@ const PostsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
         addComment,
         updateComment,
         deleteComment,
+        addTodo,
+        updateTodo,
+        deleteTodo,
         loading,
       }}
     >

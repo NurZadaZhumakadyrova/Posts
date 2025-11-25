@@ -4,7 +4,7 @@ import Navbar from '@/components/navbar/navbar.tsx';
 import Footer from '@/components/footer/footer.tsx';
 import { Route, Routes } from 'react-router-dom';
 import AllPosts from '@/components/pages/allPosts.tsx';
-import { usePosts } from '@/useContext.ts';
+import { usePostContext } from '@/useContext.ts';
 import NotFound from '@/components/pages/notFound.tsx';
 import UsersLayout from '@/components/pages/usersLayout.tsx';
 import User from '@/components/pages/user.tsx';
@@ -16,7 +16,7 @@ import UserPost from '@/components/pages/userPost.tsx';
 import Post from '@/components/pages/post.tsx';
 
 const App = () => {
-  const { posts } = usePosts();
+  const { posts } = usePostContext();
 
   return (
     <div className="relative min-h-screen flex flex-col">

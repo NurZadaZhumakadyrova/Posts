@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ApiPost, IComment, IPost } from '@/types.ts';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePosts } from '@/useContext.ts';
+import { usePostContext } from '@/useContext.ts';
 import { ArrowLeft, MessageSquare, SquarePen, Trash2 } from 'lucide-react';
 import {
   Empty,
@@ -12,7 +12,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import UserPostCommentCard from '@/components/carts/userPostCommentCard.tsx';
+import UserPostCommentCard from '@/components/cards/userPostCommentCard.tsx';
 import PostFormModal from '@/components/forms/postFormModal.tsx';
 import AlertGlobal from '@/components/alert/alert.tsx';
 import DeleteConfirmModal from '@/components/modal/confirmDeleteModal.tsx';
@@ -34,7 +34,7 @@ const UserPost = () => {
     deletePost,
     loading,
     deleteComment,
-  } = usePosts();
+  } = usePostContext();
   const { id } = useParams();
   const navigate = useNavigate();
 

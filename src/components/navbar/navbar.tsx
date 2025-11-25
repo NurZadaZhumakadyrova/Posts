@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { usePosts } from '@/useContext.ts';
+import { usePostContext } from '@/useContext.ts';
 import UserAvatar from '@/components/avatar/avatar.tsx';
 import {
   Avatar,
@@ -9,7 +9,7 @@ import {
 import { MessageSquare, Sparkles } from 'lucide-react';
 
 const Navbar = () => {
-  const { users } = usePosts();
+  const { users } = usePostContext();
   const navigate = useNavigate();
   const displayedUsers = users.slice(0, 5);
 

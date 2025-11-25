@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { usePosts } from '@/useContext';
+import { usePostContext } from '@/useContext';
 import UserAvatar from '@/components/avatar/avatar';
 import {
   Briefcase,
@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const User: React.FC = () => {
-  const { users } = usePosts();
+  const { users } = usePostContext();
   const navigate = useNavigate();
   const { id } = useParams();
   const [openSections, setOpenSections] = useState<{
@@ -26,19 +26,15 @@ const User: React.FC = () => {
     address: boolean;
     company: boolean;
     posts: boolean;
-    todos: boolean;
-    albums: boolean;
   }>({
     contact: false,
     address: false,
     company: false,
     posts: false,
-    todos: false,
-    albums: false,
   });
 
   const toggleSection = (
-    section: 'contact' | 'address' | 'company' | 'posts' | 'todos' | 'albums',
+    section: 'contact' | 'address' | 'company' | 'posts'
   ) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -63,9 +59,9 @@ const User: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col [@media(min-width:730px)]:flex-row gap-4 w-full">
+    <div className="flex flex-col [@media(min-width:730px)]:flex-row gap-3 [@media(min-width:730px)]:gap-4 w-full">
       <div className="[@media(min-width:730px)]:w-[320px] [@media(min-width:730px)]:flex-shrink-0 space-y-3">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-6 shadow-xl">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-4 [@media(min-width:640px)]:p-6 shadow-xl">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03]" />
 
           <div className="relative flex flex-col items-center text-center">
@@ -94,7 +90,7 @@ const User: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-3 shadow-xl">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-2 [@media(min-width:640px)]:p-3 shadow-xl">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.02] via-purple-500/[0.02] to-pink-500/[0.02]" />
           <div className="relative border-b border-white/10 pb-3 mb-3">
             <h3
@@ -254,67 +250,25 @@ const User: React.FC = () => {
           <div className="relative border-b border-white/10 pb-3 mb-3">
             <h3
               className="relative text-white text-base font-semibold flex items-center gap-2 cursor-pointer select-none transition-all hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-green-200 hover:to-teal-200 mb-3"
-              onClick={() => toggleSection('todos')}
+              onClick={() => navigate(`todos`)}
             >
               <ListTodo className="size-4 text-green-400" />
               <span className="flex-1">Todos</span>
-              <ChevronDown
-                className={`size-4 transition-transform duration-300 ${openSections.todos ? 'rotate-180' : ''}`}
-              />
             </h3>
-
-            <div
-              className={`space-y-2 text-sm overflow-hidden transition-all duration-300 ${openSections.todos ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div
-                onClick={() => navigate(`todos`)}
-                className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-green-500/10 hover:to-teal-500/10 transition-all"
-              >
-                <p className="text-white font-semibold">✓ My todos</p>
-              </div>
-
-              <div
-                onClick={() => navigate(`addTodo`)}
-                className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-green-500/10 hover:to-teal-500/10 transition-all"
-              >
-                <p className="text-white font-semibold">➕ Add todo</p>
-              </div>
-            </div>
           </div>
           <div className="relative">
             <h3
               className="relative text-white text-base font-semibold flex items-center gap-2 cursor-pointer select-none transition-all hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-yellow-200 hover:to-orange-200 mb-3"
-              onClick={() => toggleSection('albums')}
+              onClick={() => navigate(`albums`)}
             >
               <Images className="size-4 text-yellow-400" />
               <span className="flex-1">Albums</span>
-              <ChevronDown
-                className={`size-4 transition-transform duration-300 ${openSections.albums ? 'rotate-180' : ''}`}
-              />
             </h3>
-
-            <div
-              className={`space-y-2 text-sm overflow-hidden transition-all duration-300 ${openSections.albums ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div
-                onClick={() => navigate(`albums`)}
-                className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-yellow-500/10 hover:to-orange-500/10 transition-all"
-              >
-                <p className="text-white font-semibold">🖼️ My albums</p>
-              </div>
-
-              <div
-                onClick={() => navigate(`albums/addAlbum`)}
-                className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-yellow-500/10 hover:to-orange-500/10 transition-all"
-              >
-                <p className="text-white font-semibold">📸 Add album</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-6 shadow-xl w-full h-full min-h-[600px]">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 p-4 [@media(min-width:640px)]:p-6 shadow-xl w-full h-full min-h-[600px]">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.02] via-purple-500/[0.02] to-pink-500/[0.02]" />
           <div className="relative w-full h-full flex flex-col">
             <Outlet />
