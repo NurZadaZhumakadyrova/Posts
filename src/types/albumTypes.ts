@@ -4,6 +4,8 @@ export interface IAlbum {
   title: string;
 }
 
+export type ApiAlbum = Omit<IAlbum, 'id'>;
+
 export interface IPhoto {
   albumId: number;
   id: number;
@@ -11,3 +13,4 @@ export interface IPhoto {
   url: string;
   thumbnailUrl: string;
 }
+

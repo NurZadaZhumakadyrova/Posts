@@ -1,32 +1,73 @@
 import { Spinner } from '@/components/ui/spinner.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { useEffect, useState } from 'react';
-import type { IAlbum } from '@/types/albumTypes.ts';
+import type { ApiAlbum, IAlbum } from '@/types/albumTypes.ts';
 import { useParams } from 'react-router-dom';
 import UserAlbumCard from '@/components/cards/userAlbumCard.tsx';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
+import { Tooltip, TooltipContent, TooltipTrigger, } from '@/components/ui/tooltip.tsx';
 import { FolderPlus } from 'lucide-react';
 import { useAlbumContext } from '@/useContexts/useContextAlbums.ts';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
+import AlbumForm from '@/components/forms/albumForm.tsx';
+import AlertGlobal from '@/components/alert/alert.tsx';
 
 const UserAlbums = () => {
   const [albums, setAlbums] = useState<IAlbum[]>([]);
-  const { getUserAlbums, loading } = useAlbumContext();
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [addLoading, setAddLoading] = useState<boolean>(false);
+  const [editLoading, setEditLoading] = useState<boolean>(false);
+  const [isAddAlbumAlert, setIsAddAlbumAlert] = useState<boolean>(false);
+  const [isEditAlbumAlert, setIsEditAlbumAlert] = useState<boolean>(false);
+  const { getUserAlbums, addAlbum, updateAlbum } = useAlbumContext();
   const { userId } = useParams();
 
   useEffect(() => {
     const fetchAlbums = async () => {
+      setLoading(true);
       if (userId) {
         const data = await getUserAlbums(Number(userId));
         setAlbums(data);
       }
+      setLoading(false);
     };
     void fetchAlbums();
+
   }, [getUserAlbums, userId]);
+  const addNewAlbum = async (newAlbum: ApiAlbum) => {
+    setAddLoading(true);
+    newAlbum.userId = Number(userId);
+    await addAlbum({ ...newAlbum });
+    await getUserAlbums(Number(userId));
+    setAddLoading(false);
+    setIsModal(false);
+    setTimeout(() => {
+      setIsAddAlbumAlert(true);
+    }, 1000);
+  };
+
+  const editAlbumFunction = async (album: IAlbum) => {
+    await updateAlbum({ ...album });
+    setEditLoading(true);
+    await getUserAlbums(Number(userId));
+    setTimeout(() => {
+      setIsEditAlbumAlert(true);
+      setEditLoading(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    const closeAlert = () => {
+      if (isAddAlbumAlert || isEditAlbumAlert) {
+        setTimeout(() => {
+          setIsAddAlbumAlert(false);
+          setIsEditAlbumAlert(false);
+        }, 3000);
+      }
+    };
+    void closeAlert();
+  }, [isAddAlbumAlert, isEditAlbumAlert]);
+
 
   if (!loading && albums.length === 0) {
     return (
@@ -40,6 +81,9 @@ const UserAlbums = () => {
 
   return (
     <>
+      {isEditAlbumAlert && <AlertGlobal type='editAlbum'/>}
+      {isAddAlbumAlert && <AlertGlobal type='addAlbum'/>}
+      {isModal && <AlbumForm openModal={isModal} onOpenChange={() => setIsModal(false)} albumFunction={addNewAlbum} loading={addLoading}/>}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-12 gap-3">
           <Spinner className="size-8 text-white" />
@@ -53,7 +97,7 @@ const UserAlbums = () => {
             </h3>
             <div>
               <Button
-                // onClick={() => setIsModal(true)}
+                onClick={() => setIsModal(true)}
                 variant="outline"
                 className="bg-transparent text-white cursor-pointer ml-2 [@media(max-width:480px)]:hidden"
               >
@@ -62,7 +106,7 @@ const UserAlbums = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    // onClick={() => setIsModal(true)}
+                    onClick={() => setIsModal(true)}
                     variant="outline"
                     size="icon"
                     type="button"
@@ -78,7 +122,7 @@ const UserAlbums = () => {
             </div>
           </div>
           {albums.map((album) => (
-            <UserAlbumCard key={album.id} album={album} />
+            <UserAlbumCard key={album.id} album={album} editAlbumFunction={editAlbumFunction} editLoading={editLoading}/>
           ))}
         </div>
       )}

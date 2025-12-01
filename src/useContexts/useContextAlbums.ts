@@ -1,10 +1,13 @@
 import { createContext, useContext } from 'react';
-import type { IAlbum, IPhoto } from '@/types/albumTypes.ts';
+import type { ApiAlbum, IAlbum, IPhoto } from '@/types/albumTypes.ts';
 
 interface PostsContextType {
   getUserAlbums: (userId: number) => Promise<IAlbum[]>;
   getUserAlbum: (albumId: number) => Promise<IAlbum | null>;
   getAlbumPhotos: (userId: number) => Promise<IPhoto[]>;
+  addAlbum: (newAlbum: ApiAlbum) => Promise<void>;
+  updateAlbum: (album: IAlbum) => Promise<void>;
+  deleteAlbum: (albumId: number) => Promise<void>;
   loading: boolean;
 }
 
