@@ -1,16 +1,16 @@
-import type { IPost, IUser } from '@/types';
 import React from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import { useNavigate } from 'react-router-dom';
-import { usePostContext } from '@/useContext.ts';
 import { ChevronsRight, User as UserIcon } from 'lucide-react';
+import type { IPost } from '@/types/postTypes.ts';
+import type { IUser } from '@/types/userTypes.ts';
 
 interface Props {
   post: IPost;
+  users: IUser[];
 }
 
-const PostCard: React.FC<Props> = ({ post }) => {
-  const { users } = usePostContext();
+const PostCard: React.FC<Props> = ({ post, users }) => {
   const navigate = useNavigate();
   const user = users.find((person) => person.id === post.userId) as IUser;
 

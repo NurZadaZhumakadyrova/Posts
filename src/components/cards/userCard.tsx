@@ -1,8 +1,9 @@
 import React from 'react';
-import UserAvatar from '@/components/avatar/avatar.tsx';
+import MainAvatar from '@/components/avatar/mainAvatar.tsx';
 import { Globe, Mail, MapPin, Phone } from 'lucide-react';
-import type { IUser } from '@/types.ts';
 import { useNavigate } from 'react-router-dom';
+import UserAvatar from '../avatar/avatar';
+import type { IUser } from '@/types/userTypes';
 
 interface Props {
   user: IUser;
@@ -24,7 +25,11 @@ const UserCard: React.FC<Props> = ({ user }) => {
               className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 opacity-0 group-hover:opacity-40 transition-opacity duration-300"
               style={{ filter: 'blur(12px)' }}
             />
-            <UserAvatar user={user} size="lg" className="relative" />
+            {user.id === 1 ? (
+              <MainAvatar user={user} size="lg" className="relative" />
+            ) : (
+              <UserAvatar user={user} />
+            )}
           </div>
           <h3 className="font-bold text-xl text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-200 group-hover:to-pink-200 transition-all duration-300">
             {user.name}

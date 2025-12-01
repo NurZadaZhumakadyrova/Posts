@@ -1,44 +1,40 @@
 import './App.css';
-import Layout from '@/components/layout/layout.tsx';
-import Navbar from '@/components/navbar/navbar.tsx';
-import Footer from '@/components/footer/footer.tsx';
+import Layout from '@/components/layouts/layout.tsx';
 import { Route, Routes } from 'react-router-dom';
-import AllPosts from '@/components/pages/allPosts.tsx';
-import { usePostContext } from '@/useContext.ts';
-import NotFound from '@/components/pages/notFound.tsx';
-import UsersLayout from '@/components/pages/usersLayout.tsx';
-import User from '@/components/pages/user.tsx';
-import AllUsers from '@/components/pages/allUsers.tsx';
-import UserPosts from '@/components/pages/userPosts.tsx';
-import UserTodos from '@/components/pages/userTodos.tsx';
-import UserAlbums from '@/components/pages/userAlbums.tsx';
-import UserPost from '@/components/pages/userPost.tsx';
-import Post from '@/components/pages/post.tsx';
+import AllPosts from '@/pages/allPosts.tsx';
+import NotFound from '@/pages/notFound.tsx';
+import UsersLayout from '@/components/layouts/usersLayout.tsx';
+import User from '@/pages/user.tsx';
+import AllUsers from '@/pages/allUsers.tsx';
+import UserPosts from '@/pages/userPosts.tsx';
+import UserAlbums from '@/pages/userAlbums.tsx';
+import UserPost from '@/pages/userPost.tsx';
+import Post from '@/pages/post.tsx';
+import UserAlbumPhotos from '@/pages/userAlbumPhotos.tsx';
+import TodosLayout from '@/components/layouts/todosLayout.tsx';
+import AlbumsLayout from '@/components/layouts/albumsLayout.tsx';
 
 const App = () => {
-  const { posts } = usePostContext();
-
   return (
-    <div className="relative min-h-screen flex flex-col">
-      <Navbar />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<AllPosts posts={posts} />} />
-          <Route path="/posts/:postId" element={<Post />} />
-          <Route path="/users" element={<UsersLayout />}>
-            <Route path="" element={<AllUsers />} />
-            <Route path=":id" element={<User />}>
-              <Route path="" element={<UserPosts />} />
-              <Route path="posts/:idPost" element={<UserPost />} />
-              <Route path="todos" element={<UserTodos />} />
-              <Route path="albums" element={<UserAlbums />} />
+    <Layout>
+      <Routes>
+        <Route path="/" element={<AllPosts />} />
+        <Route path="/posts/:postId" element={<Post />} />
+        <Route path="/users" element={<UsersLayout />}>
+          <Route path="" element={<AllUsers />} />
+          <Route path=":userId" element={<User />}>
+            <Route path="" element={<UserPosts />} />
+            <Route path="posts/:idPost" element={<UserPost />} />
+            <Route path="todos" element={<TodosLayout />} />
+            <Route path="albums" element={<AlbumsLayout />}>
+              <Route path="" element={<UserAlbums />} />
+              <Route path=":idAlbum" element={<UserAlbumPhotos />} />
             </Route>
           </Route>
-          <Route path={'*'} element={<NotFound />} />
-        </Routes>
-      </Layout>
-      <Footer />
-    </div>
+        </Route>
+        <Route path={'*'} element={<NotFound />} />
+      </Routes>
+    </Layout>
   );
 };
 

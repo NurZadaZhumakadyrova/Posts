@@ -1,7 +1,7 @@
 import React from 'react';
-import type { IPost } from '@/types.ts';
 import { useNavigate } from 'react-router-dom';
 import { ChevronsRight, FileText } from 'lucide-react';
+import type { IPost } from '@/types/postTypes.ts';
 
 interface Props {
   post: IPost;

@@ -1,10 +1,11 @@
 import React from 'react';
-import type { IComment } from '@/types.ts';
 import { Mail, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import { getAvatarColor, getInitials } from '@/globalConstans.ts';
 import { Spinner } from '@/components/ui/spinner.tsx';
+import { getColor } from '@/utils/getColor.ts';
+import { getInitials } from '@/utils/getUserInitials.ts';
+import type { IComment } from '@/types/commentTypes.ts';
 
 interface Props {
   comment: IComment;
@@ -25,12 +26,12 @@ const UserPostCommentCard: React.FC<Props> = ({
           <div
             className="absolute inset-0 rounded-full bg-gradient-to-br opacity-0 group-hover:opacity-30 transition-opacity duration-300"
             style={{
-              background: `linear-gradient(135deg, ${getAvatarColor(comment.email).replace('from-', '#').replace(' to-', ', #')})`,
+              background: `linear-gradient(135deg, ${getColor(comment.email).replace('from-', '#').replace(' to-', ', #')})`,
               filter: 'blur(8px)',
             }}
           />
           <Avatar
-            className={`size-10 border-2 border-white/20 bg-gradient-to-br ${getAvatarColor(comment.email)} relative`}
+            className={`size-10 border-2 border-white/20 bg-gradient-to-br ${getColor(comment.email)} relative`}
           >
             <AvatarFallback className="text-white font-semibold bg-transparent text-sm">
               {getInitials(comment.name)}

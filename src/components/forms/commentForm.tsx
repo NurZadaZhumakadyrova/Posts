@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
-import type { ApiComment } from '@/types.ts';
 import React, { useState } from 'react';
+import type { ApiComment } from '@/types/commentTypes.ts';
 
 interface Props {
   commentFunction: (comment: ApiComment) => void;

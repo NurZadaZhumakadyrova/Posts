@@ -1,19 +1,18 @@
 import React from 'react';
-import type { IAlbum } from '@/types.ts';
-import { Image, Folder } from 'lucide-react';
+import type { IAlbum } from '@/types/albumTypes.ts';
+import { Folder, Image } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   album: IAlbum;
 }
 
 const UserAlbumCard: React.FC<Props> = ({ album }) => {
+  const navigate = useNavigate();
   return (
-    <div
-      key={album.id}
-      className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-yellow-400/30 p-4 transition-all duration-300 cursor-pointer"
-    >
+    <div className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-yellow-400/30 p-4 transition-all duration-300 cursor-pointer">
       <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 via-orange-500/0 to-yellow-500/0 group-hover:from-yellow-500/[0.05] group-hover:via-orange-500/[0.05] group-hover:to-yellow-500/[0.05] transition-all duration-300 pointer-events-none" />
-      <div className="relative">
+      <div className="relative" onClick={() => navigate(`${album.id}`)}>
         <div className="flex items-start gap-3 mb-2">
           <div className="p-2 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 shrink-0">
             <Folder className="size-4 text-yellow-300" />

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Mail, Pencil } from 'lucide-react';
-import type { IComment } from '@/types.ts';
-import { getAvatarColor, getInitials } from '@/globalConstans.ts';
 import { Button } from '@/components/ui/button.tsx';
 import EditCommentForm from '@/components/forms/editCommentForm.tsx';
+import { getColor } from '@/utils/getColor.ts';
+import { getInitials } from '@/utils/getUserInitials.ts';
+import type { IComment } from '@/types/commentTypes.ts';
 
 interface Props {
   comment: IComment;
   index: number;
   editCommentPost: (editCommit: IComment) => void;
   isEditLoading: boolean;
+  userPost: boolean;
 }
 
 const CommentCard: React.FC<Props> = ({
@@ -18,6 +20,7 @@ const CommentCard: React.FC<Props> = ({
   index,
   editCommentPost,
   isEditLoading,
+  userPost,
 }) => {
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
 
@@ -45,19 +48,19 @@ const CommentCard: React.FC<Props> = ({
             <div
               className="absolute inset-0 rounded-full bg-gradient-to-br opacity-0 group-hover:opacity-30 transition-opacity duration-300"
               style={{
-                background: `linear-gradient(135deg, ${getAvatarColor(comment.email).replace('from-', '#').replace(' to-', ', #')})`,
+                background: `linear-gradient(135deg, ${getColor(comment.email).replace('from-', '#').replace(' to-', ', #')})`,
                 filter: 'blur(8px)',
               }}
             />
             <Avatar
-              className={`size-10 border-2 border-white/20 bg-gradient-to-br ${getAvatarColor(comment.email)} relative`}
+              className={`size-10 border-2 border-white/20 bg-gradient-to-br ${getColor(comment.email)} relative`}
             >
               <AvatarFallback className="text-white font-semibold bg-transparent text-sm">
                 {getInitials(comment.email)}
               </AvatarFallback>
             </Avatar>
           </div>
-          {isEditComment ? (
+          {(isEditComment) ? (
             <EditCommentForm
               closeEditForm={() => setIsEditComment(false)}
               comment={comment}
@@ -85,15 +88,17 @@ const CommentCard: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <Button
-          onClick={() => setIsEditComment(true)}
-          variant="outline"
-          size="icon"
-          type="button"
-          className={`absolute top-2 right-2 size-7 rounded-full border-none bg-white/5 hover:bg-white-500/20 text-white/50 hover:text-white-400 transition-all opacity-0 group-hover:opacity-100 ${isEditComment ? 'hidden' : ''}`}
-        >
-          <Pencil className="size-3.5" />
-        </Button>
+        {userPost ? null :
+          <Button
+            onClick={() => setIsEditComment(true)}
+            variant="outline"
+            size="icon"
+            type="button"
+            className={`absolute top-2 right-2 size-7 rounded-full border-none bg-white/5 hover:bg-white-500/20 text-white/50 hover:text-white-400 transition-all opacity-0 group-hover:opacity-100 ${isEditComment ? 'hidden' : ''}`}
+          >
+            <Pencil className="size-3.5" />
+          </Button> 
+        }
       </div>
     </div>
   );

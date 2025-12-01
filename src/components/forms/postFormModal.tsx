@@ -12,9 +12,9 @@ import { Button } from '@/components/ui/button.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
-import type { ApiPost } from '@/types.ts';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import { FileEdit, Send, Sparkles, Type, FileText } from 'lucide-react';
+import type { ApiPost } from '@/types/postTypes.ts';
 
 interface Props {
   openModal: boolean;

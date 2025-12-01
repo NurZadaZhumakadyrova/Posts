@@ -2,28 +2,19 @@ import { CheckCircle2, Sparkles } from 'lucide-react';
 import React from 'react';
 
 interface Props {
-  isNewPost?: boolean;
-  editPost?: boolean;
-  deletePost?: boolean;
-  addComment?: boolean;
-  editComment?: boolean;
-  deleteComment?: boolean;
-  addTask?: boolean;
-  deleteTask?:boolean;
-  editTask?:boolean;
+  type:
+    | 'isNewPost'
+    | 'editPost'
+    | 'deletePost'
+    | 'addComment'
+    | 'editComment'
+    | 'deleteComment'
+    | 'addTask'
+    | 'deleteTask'
+    | 'editTask';
 }
 
-const AlertGlobal: React.FC<Props> = ({
-  isNewPost,
-  editPost,
-  deletePost,
-  addComment,
-  editComment,
-  deleteComment,
-  addTask,
-  deleteTask,
-  editTask,
-}) => {
+const AlertGlobal: React.FC<Props> = ({ type }) => {
   return (
     <div className="fixed bottom-6 right-6 z-[9999] animate-in slide-in-from-bottom-5 duration-700 fade-in-0">
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/90 via-black/95 to-black/90 border border-white/20 shadow-2xl backdrop-blur-xl">
@@ -44,15 +35,16 @@ const AlertGlobal: React.FC<Props> = ({
               <Sparkles className="size-5 text-green-300" />
             </div>
             <div className="text-white/90 font-medium text-sm">
-              {isNewPost && 'The post was successfully created!'}
-              {editPost && 'The post was successfully updated!'}
-              {deletePost && 'The post was successfully deleted!'}
-              {deleteComment && 'The comment was successfully deleted!'}
-              {addComment && 'The comment was successfully added!'}
-              {editComment && 'The comment was successfully edited!'}
-              {addTask && 'The task was successfully added!'}
-              {deleteTask && 'The task was successfully deleted!'}
-              {editTask && 'The task was successfully updated!'}
+              {type === 'isNewPost' && 'The post was successfully created!'}
+              {type === 'editPost' && 'The post was successfully updated!'}
+              {type === 'deletePost' && 'The post was successfully deleted!'}
+              {type === 'deleteComment' &&
+                'The comment was successfully deleted!'}
+              {type === 'addComment' && 'The comment was successfully added!'}
+              {type === 'editComment' && 'The comment was successfully edited!'}
+              {type === 'addTask' && 'The task was successfully added!'}
+              {type === 'deleteTask' && 'The task was successfully deleted!'}
+              {type === 'editTask' && 'The task was successfully updated!'}
             </div>
           </div>
         </div>

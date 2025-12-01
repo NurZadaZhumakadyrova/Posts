@@ -5,15 +5,15 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from '@/components/ui/dialog.tsx';
 import { FileText, Send } from 'lucide-react';
 import { Label } from '@/components/ui/label.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import React, { useState } from 'react';
-import type { ApiTodo } from '@/types.ts';
 import { Spinner } from '@/components/ui/spinner.tsx';
+import type { ApiTodo } from '@/types/todoTypes.ts';
 
 interface Props {
   openModal: boolean;
@@ -28,10 +28,15 @@ const initialState = {
   userId: 0,
 };
 
-const TodoForm:React.FC<Props> = ({ openModal, onOpenChange, todoFunction, loading }) => {
+const TodoForm: React.FC<Props> = ({
+  openModal,
+  onOpenChange,
+  todoFunction,
+  loading,
+}) => {
   const [formData, setFormData] = useState<ApiTodo>(initialState);
 
-  const handelChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handelChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -39,7 +44,7 @@ const TodoForm:React.FC<Props> = ({ openModal, onOpenChange, todoFunction, loadi
     }));
   };
 
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     todoFunction(formData);
     setFormData(initialState);

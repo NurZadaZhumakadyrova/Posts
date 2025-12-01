@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
-import type { IComment } from '@/types.ts';
+import type { IComment } from '@/types/commentTypes.ts';
 
 interface Props {
   editCommentPost: (editCommit: IComment) => void;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Github, Mail, MessageSquare, Users } from 'lucide-react';
+import { mainUserNavLinks } from '@/utils/glogalConst.ts';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -83,33 +84,17 @@ const Footer: React.FC = () => {
               Community
             </h4>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="/"
-                  className="text-white/60 hover:text-white transition-colors text-sm flex items-center gap-2 group"
-                >
-                  <span className="size-1 rounded-full bg-purple-400 group-hover:bg-pink-400 transition-colors" />
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/"
-                  className="text-white/60 hover:text-white transition-colors text-sm flex items-center gap-2 group"
-                >
-                  <span className="size-1 rounded-full bg-pink-400 group-hover:bg-blue-400 transition-colors" />
-                  Guidelines
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/"
-                  className="text-white/60 hover:text-white transition-colors text-sm flex items-center gap-2 group"
-                >
-                  <span className="size-1 rounded-full bg-blue-400 group-hover:bg-purple-400 transition-colors" />
-                  Support
-                </a>
-              </li>
+              {mainUserNavLinks.slice(1).map((link, index) => (
+                <li key={index}>
+                  <a
+                    href={link.href}
+                    className="text-white/60 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                  >
+                    <span className="size-1 rounded-full bg-purple-400 group-hover:bg-pink-400 transition-colors"/>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

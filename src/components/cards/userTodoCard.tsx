@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import type { ITodo } from '@/types.ts';
 import { CheckCircle2, Circle, Pencil, SendHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
-import { usePostContext } from '@/useContext.ts';
 import { Input } from '@/components/ui/input.tsx';
+import { useTodoContext } from '@/useContexts/useContextTodos.ts';
+import { useParams } from 'react-router-dom';
+import type { ITodo } from '@/types/todoTypes.ts';
 
 interface Props {
   todo: ITodo;
@@ -14,18 +15,27 @@ interface Props {
   editLoading: boolean;
 }
 
-
-const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTodo, editLoading }) => {
+const UserTodoCard: React.FC<Props> = ({
+  todo,
+  deleteTodo,
+  deleteLoading,
+  editTodo,
+  editLoading,
+}) => {
   const [formData, setFormData] = useState<ITodo>(todo);
   const [edit, setEdit] = useState<boolean>(false);
-  const { updateTodo } = usePostContext();
+  const { updateTodo, getUserTodos } = useTodoContext();
+  const { userId } = useParams();
 
   const changeTaskCompleted = async (todo: ITodo) => {
     todo.completed = !todo.completed;
     await updateTodo({ ...todo });
+    if (userId) {
+      await getUserTodos(Number(userId));
+    }
   };
 
-  const handelChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -33,7 +43,7 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
     }));
   };
 
-  const handelSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const handelSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     editTodo(formData);
     setTimeout(() => {
@@ -58,7 +68,10 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
       />
 
       {edit ? (
-        <form onSubmit={handelSubmit} className="relative flex items-center justify-between gap-3">
+        <form
+          onSubmit={handelSubmit}
+          className="relative flex items-center justify-between gap-3"
+        >
           <Input
             id="title"
             name="title"
@@ -76,7 +89,11 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
               type="submit"
               className="size-7 mr-2 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
             >
-              {editLoading ? <Spinner className="size-4"/> : <SendHorizontal className="size-4"/>}
+              {editLoading ? (
+                <Spinner className="size-4" />
+              ) : (
+                <SendHorizontal className="size-4" />
+              )}
             </Button>
             <Button
               onClick={() => setEdit(false)}
@@ -85,7 +102,7 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
               type="button"
               className="size-7 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
             >
-              <X className="size-4"/>
+              <X className="size-4" />
             </Button>
           </div>
         </form>
@@ -95,7 +112,8 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
             {todo.completed ? (
               <CheckCircle2
                 onClick={() => changeTaskCompleted(todo)}
-                className="size-5 text-green-400" strokeWidth={2.5}
+                className="size-5 text-green-400"
+                strokeWidth={2.5}
               />
             ) : (
               <Circle
@@ -122,7 +140,7 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
               type="button"
               className="size-7 mr-2 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
             >
-              <Pencil className="size-4"/>
+              <Pencil className="size-4" />
             </Button>
             <Button
               onClick={() => deleteTodo(todo.id)}
@@ -132,7 +150,11 @@ const UserTodoCard: React.FC<Props> = ({ todo, deleteTodo, deleteLoading, editTo
               type="button"
               className="size-7 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
             >
-              {deleteLoading ? <Spinner className="size-4"/> : <X className="size-4"/>}
+              {deleteLoading ? (
+                <Spinner className="size-4" />
+              ) : (
+                <X className="size-4" />
+              )}
             </Button>
           </div>
         </div>
