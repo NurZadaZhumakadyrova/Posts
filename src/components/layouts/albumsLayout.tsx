@@ -1,12 +1,7 @@
-import AlbumsProvider from '@/providers/AlbumsProvider.tsx';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@tanstack/react-router';
 
 const AlbumsLayout = () => {
-  return (
-    <AlbumsProvider>
-      <Outlet />
-    </AlbumsProvider>
-  );
+  return <Outlet />;
 };
 
 export default AlbumsLayout;

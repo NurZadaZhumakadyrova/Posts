@@ -3,21 +3,25 @@ import { Mail, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
-import { getColor } from '@/utils/getColor.ts';
-import { getInitials } from '@/utils/getUserInitials.ts';
 import type { IComment } from '@/types/commentTypes.ts';
+import { useUserContext } from '@/useContexts/useContextUsers.ts';
+import type { IPost } from '@/types/postTypes.ts';
+import { getColor, getInitials } from '@/utils';
 
 interface Props {
   comment: IComment;
   deleteComment: (id: number) => void;
   isDeleteCommentLoading: boolean;
+  post: IPost;
 }
 
 const UserPostCommentCard: React.FC<Props> = ({
   comment,
   deleteComment,
   isDeleteCommentLoading,
+  post,
 }) => {
+  const { user } = useUserContext();
   return (
     <div className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 p-4 transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-pink-500/0 to-purple-500/0 group-hover:from-purple-500/[0.03] group-hover:via-pink-500/[0.03] group-hover:to-purple-500/[0.03] transition-all duration-300 pointer-events-none" />
@@ -58,20 +62,22 @@ const UserPostCommentCard: React.FC<Props> = ({
           </p>
         </div>
       </div>
-      <Button
-        disabled={isDeleteCommentLoading}
-        onClick={() => deleteComment(comment.id)}
-        variant="outline"
-        size="icon"
-        type="button"
-        className="absolute top-2 right-2 size-7 rounded-full border-none bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"
-      >
-        {isDeleteCommentLoading ? (
-          <Spinner className="size-3.5" />
-        ) : (
-          <X className="size-3.5" />
-        )}
-      </Button>
+      {(user && user.id === 1) && post.userId === 1 ? (
+        <Button
+          disabled={isDeleteCommentLoading}
+          onClick={() => deleteComment(comment.id)}
+          variant="outline"
+          size="icon"
+          type="button"
+          className="absolute top-2 right-2 size-7 rounded-full border-none bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"
+        >
+          {isDeleteCommentLoading ? (
+            <Spinner className="size-3.5" />
+          ) : (
+            <X className="size-3.5" />
+          )}
+        </Button>
+      ) : null}
     </div>
   );
 };

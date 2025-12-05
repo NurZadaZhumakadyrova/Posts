@@ -3,9 +3,8 @@ import { CheckCircle2, Circle, Pencil, SendHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { useTodoContext } from '@/useContexts/useContextTodos.ts';
-import { useParams } from 'react-router-dom';
 import type { ITodo } from '@/types/todoTypes.ts';
+import { useParams } from '@tanstack/react-router';
 
 interface Props {
   todo: ITodo;
@@ -24,15 +23,12 @@ const UserTodoCard: React.FC<Props> = ({
 }) => {
   const [formData, setFormData] = useState<ITodo>(todo);
   const [edit, setEdit] = useState<boolean>(false);
-  const { updateTodo, getUserTodos } = useTodoContext();
-  const { userId } = useParams();
+  const { userId } = useParams({ from: '/users/$userId' });
 
   const changeTaskCompleted = async (todo: ITodo) => {
     todo.completed = !todo.completed;
-    await updateTodo({ ...todo });
-    if (userId) {
-      await getUserTodos(Number(userId));
-    }
+    const updatedTodo = { ...todo };
+    editTodo(updatedTodo);
   };
 
   const handelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +63,7 @@ const UserTodoCard: React.FC<Props> = ({
         }`}
       />
 
-      {edit ? (
+      {edit && Number(userId) === 1 ? (
         <form
           onSubmit={handelSubmit}
           className="relative flex items-center justify-between gap-3"
@@ -109,18 +105,36 @@ const UserTodoCard: React.FC<Props> = ({
       ) : (
         <div className="relative flex items-center justify-between gap-3">
           <div className="shrink-0 mt-0.5">
-            {todo.completed ? (
-              <CheckCircle2
-                onClick={() => changeTaskCompleted(todo)}
-                className="size-5 text-green-400"
-                strokeWidth={2.5}
-              />
+            {Number(userId) === 1 ? (
+              <>
+                {todo.completed ? (
+                  <CheckCircle2
+                    onClick={() => changeTaskCompleted(todo)}
+                    className="size-5 text-green-400"
+                    strokeWidth={2.5}
+                  />
+                ) : (
+                  <Circle
+                    onClick={() => changeTaskCompleted(todo)}
+                    className="size-5 text-white/30 group-hover:text-purple-400 transition-colors"
+                    strokeWidth={2}
+                  />
+                )}
+              </>
             ) : (
-              <Circle
-                onClick={() => changeTaskCompleted(todo)}
-                className="size-5 text-white/30 group-hover:text-purple-400 transition-colors"
-                strokeWidth={2}
-              />
+              <>
+                {todo.completed ? (
+                  <CheckCircle2
+                    className="size-5 text-green-400"
+                    strokeWidth={2.5}
+                  />
+                ) : (
+                  <Circle
+                    className="size-5 text-white/30 group-hover:text-purple-400 transition-colors"
+                    strokeWidth={2}
+                  />
+                )}
+              </>
             )}
           </div>
           <p
@@ -132,31 +146,33 @@ const UserTodoCard: React.FC<Props> = ({
           >
             {todo.title}
           </p>
-          <div className="opacity-0 group-hover:opacity-100 ml-1">
-            <Button
-              onClick={() => setEdit(true)}
-              variant="outline"
-              size="icon"
-              type="button"
-              className="size-7 mr-2 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
-            >
-              <Pencil className="size-4" />
-            </Button>
-            <Button
-              onClick={() => deleteTodo(todo.id)}
-              disabled={deleteLoading}
-              variant="outline"
-              size="icon"
-              type="button"
-              className="size-7 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
-            >
-              {deleteLoading ? (
-                <Spinner className="size-4" />
-              ) : (
-                <X className="size-4" />
-              )}
-            </Button>
-          </div>
+          {Number(userId) === 1 && (
+            <div className="opacity-0 group-hover:opacity-100 ml-1">
+              <Button
+                onClick={() => setEdit(true)}
+                variant="outline"
+                size="icon"
+                type="button"
+                className="size-7 mr-2 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
+              >
+                <Pencil className="size-4"/>
+              </Button>
+              <Button
+                onClick={() => deleteTodo(todo.id)}
+                disabled={deleteLoading}
+                variant="outline"
+                size="icon"
+                type="button"
+                className="size-7 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 text-white hover:text-white border-white/20 hover:border-purple-400/40 transition-all"
+              >
+                {deleteLoading ? (
+                  <Spinner className="size-4"/>
+                ) : (
+                  <X className="size-4"/>
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

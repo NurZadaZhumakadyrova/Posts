@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import React from 'react';
 import type { IUser } from '@/types/userTypes.ts';
+import { getInitials } from '@/utils';
 
 interface Props {
   user: IUser;
@@ -30,7 +31,7 @@ const MainAvatar: React.FC<Props> = ({ user, size = 'md', className }) => {
       <AvatarFallback
         className={`text-white font-semibold ${textSizeClasses[size]}`}
       >
-        {user.name}
+        {getInitials(user.name)}
       </AvatarFallback>
     </Avatar>
   );

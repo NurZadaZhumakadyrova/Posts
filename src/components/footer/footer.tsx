@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FileText, Github, Mail, MessageSquare, Users } from 'lucide-react';
-import { mainUserNavLinks } from '@/utils/glogalConst.ts';
+import { mainUserNavLinks } from '@/utils';
+import { Link } from '@tanstack/react-router';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();

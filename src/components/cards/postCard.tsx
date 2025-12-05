@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import { useNavigate } from 'react-router-dom';
 import { ChevronsRight, User as UserIcon } from 'lucide-react';
 import type { IPost } from '@/types/postTypes.ts';
 import type { IUser } from '@/types/userTypes.ts';
+import { useNavigate } from '@tanstack/react-router';
 
 interface Props {
   post: IPost;
@@ -20,7 +20,7 @@ const PostCard: React.FC<Props> = ({ post, users }) => {
       <div className="absolute inset-0 rounded-3xl border border-transparent opacity-0 group-hover:opacity-100 group-hover:border-purple-500/30 transition-all duration-500" />
       <div
         className="relative z-10 flex flex-col h-full cursor-pointer"
-        onClick={() => navigate(`/posts/${post.id}`)}
+        onClick={() => navigate({ to:`/posts/${post.id}` })}
       >
         <h5 className="font-bold text-center mb-4 text-lg capitalize leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
           {post.title}
@@ -34,7 +34,7 @@ const PostCard: React.FC<Props> = ({ post, users }) => {
             className="p-0 h-auto hover:no-underline group/author flex-1 min-w-0"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/users/${user.id}`);
+              void navigate({ to:`/users/${user.id}` });
             }}
           >
             <div className="flex items-center gap-2 min-w-0 w-full">

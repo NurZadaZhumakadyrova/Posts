@@ -1,18 +1,8 @@
-import { mainUserNavLinks } from '@/utils/glogalConst.ts';
-import { Link, useLocation } from 'react-router-dom';
+import { mainUserNavLinks } from '@/utils';
+import { Link, useLocation } from '@tanstack/react-router';
 
 const MainLinks = () => {
   const pathName = useLocation().pathname;
-
-  // const mutationLink = mainUserNavLinks.find((link) => {
-  //   if (pathName.split('/').length > 4) {
-  //     const newLink = pathName.split('/').reverse().slice(2).reverse().join('/');
-  //     console.log(newLink);
-  //     if (link.href === newLink) return newLink;
-  //   }
-  // });
-  //
-  // console.log(mutationLink);
 
   return (
     <div className="flex items-center justify-between w-full">

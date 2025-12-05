@@ -1,8 +1,8 @@
 import React, { type PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { UserContext } from '@/useContexts/useContextUsers.ts';
-import { getAllUsers } from '@/api/userRequests.ts';
-import { getUser } from '@/utils/getUser.ts';
+import { getAllUsers } from '@/app/api/userRequests.ts';
 import type { IUser } from '@/types/userTypes.ts';
+import { getUser } from '@/utils';
 
 const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -24,7 +24,6 @@ const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   const getUsers = useCallback(async () => {
-    setLoading(true);
     setLoading(true);
     const dataUsers = await getAllUsers();
     if (dataUsers) {

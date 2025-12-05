@@ -1,25 +1,24 @@
 import PostCard from '@/components/cards/postCard.tsx';
-import { usePostContext } from '@/useContexts/useContextPosts.ts';
 import Loading from '@/components/loading/loading.tsx';
 import { useUserContext } from '@/useContexts/useContextUsers.ts';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
+import { usePosts } from '@/app/hooks';
 
 const AllPosts = () => {
-  const { posts, getPosts, loading } = usePostContext();
   const { users, getUsers } = useUserContext();
+  const { data: posts, isPending: postsLoading } = usePosts();
 
-  if (!loading && posts.length === 0) {
+  if (!postsLoading && (posts && posts.length === 0)) {
     return (
       <EmptyBlock
         title="No Posts"
         text="You're all caught up. New posts will appear here."
         type="post"
-        getFunction={async () => await getPosts()}
       />
     );
   }
 
-  if (!loading && users.length === 0) {
+  if (!postsLoading && users.length === 0) {
     return (
       <EmptyBlock
         title="No User"
@@ -32,7 +31,7 @@ const AllPosts = () => {
 
   return (
     <>
-      {loading ? (
+      {postsLoading ? (
         <Loading />
       ) : (
         <section className="min-h-screen py-16 px-4 md:px-8">
@@ -49,7 +48,7 @@ const AllPosts = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-16">
-              {posts.map((post) => (
+              {posts && posts.map((post) => (
                 <PostCard key={post.id} post={post} users={users} />
               ))}
             </div>

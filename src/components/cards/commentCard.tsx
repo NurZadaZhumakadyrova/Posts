@@ -3,9 +3,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Mail, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import EditCommentForm from '@/components/forms/editCommentForm.tsx';
-import { getColor } from '@/utils/getColor.ts';
-import { getInitials } from '@/utils/getUserInitials.ts';
 import type { IComment } from '@/types/commentTypes.ts';
+import { getColor, getInitials } from '@/utils';
 
 interface Props {
   comment: IComment;

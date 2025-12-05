@@ -1,9 +1,9 @@
 import React from 'react';
 import MainAvatar from '@/components/avatar/mainAvatar.tsx';
 import { Globe, Mail, MapPin, Phone } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import UserAvatar from '../avatar/avatar';
 import type { IUser } from '@/types/userTypes';
+import { useNavigate } from '@tanstack/react-router';
 
 interface Props {
   user: IUser;
@@ -13,7 +13,7 @@ const UserCard: React.FC<Props> = ({ user }) => {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate(`${user.id}`)}
+      onClick={() => navigate({ to:`/users/${user.id}` })}
       className="group relative flex flex-col rounded-3xl border border-white/20 p-6 text-white cursor-pointer hover:scale-[1.02] transition-all duration-500 bg-gradient-to-br from-black/70 via-black/80 to-black/70 hover:from-black/60 hover:via-black/70 hover:to-black/60 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-black/40"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-indigo-500/[0.03] group-hover:via-purple-500/[0.03] group-hover:to-pink-500/[0.03] transition-all duration-500 pointer-events-none" />

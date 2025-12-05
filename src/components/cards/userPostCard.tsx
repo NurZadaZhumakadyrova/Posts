@@ -1,7 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ChevronsRight, FileText } from 'lucide-react';
 import type { IPost } from '@/types/postTypes.ts';
+import { useNavigate } from '@tanstack/react-router';
 
 interface Props {
   post: IPost;
@@ -12,7 +12,7 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
   return (
     <div
       className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/30 p-4 transition-all duration-300 cursor-pointer"
-      onClick={() => navigate(`posts/${post.id}`)}
+      onClick={() => navigate({ to: `posts/${post.id}` })}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/[0.05] group-hover:via-purple-500/[0.05] group-hover:to-pink-500/[0.05] transition-all duration-300 pointer-events-none" />
       <div className="relative">

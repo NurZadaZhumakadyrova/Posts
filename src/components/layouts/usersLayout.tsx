@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@tanstack/react-router';
 
 const UsersLayout: React.FC = () => {
   return (

@@ -14,7 +14,10 @@ interface Props {
     | 'editTask'
     | 'addAlbum'
     | 'editAlbum'
-    | 'deleteAlbum';
+    | 'deleteAlbum'
+    | 'deletePhoto'
+    | 'addPhoto'
+    | 'editPhoto';
 }
 
 const AlertGlobal: React.FC<Props> = ({ type }) => {
@@ -51,6 +54,9 @@ const AlertGlobal: React.FC<Props> = ({ type }) => {
               {type === 'addAlbum' && 'The album was successfully added!'}
               {type === 'editAlbum' && 'The album was successfully updated!'}
               {type === 'deleteAlbum' && 'The album was successfully deleted!'}
+              {type === 'deletePhoto' && 'The photo was successfully deleted!'}
+              {type === 'addPhoto' && 'The photo was successfully added!'}
+              {type === 'editPhoto' && 'The photo was successfully updated!'}
             </div>
           </div>
         </div>

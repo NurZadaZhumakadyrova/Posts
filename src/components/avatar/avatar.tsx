@@ -4,9 +4,8 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar.tsx';
 import React from 'react';
-import { getColor } from '@/utils/getColor.ts';
-import { getInitials } from '@/utils/getUserInitials.ts';
 import type { IUser } from '@/types/userTypes.ts';
+import { getColor, getInitials } from '@/utils';
 
 interface Props {
   user: IUser;

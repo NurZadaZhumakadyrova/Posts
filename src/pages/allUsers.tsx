@@ -4,7 +4,7 @@ import Loading from '@/components/loading/loading.tsx';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
 
 const AllUsers = () => {
-  const { users, loading } = useUserContext();
+  const { users, getUsers, loading } = useUserContext();
 
   if (!loading && users.length === 0) {
     return (
@@ -12,6 +12,7 @@ const AllUsers = () => {
         title="No Users"
         text="You're all caught up. New user will appear here."
         type="user"
+        getFunction={async () => await getUsers()}
       />
     );
   }

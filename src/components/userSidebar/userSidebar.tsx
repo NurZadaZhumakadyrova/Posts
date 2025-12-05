@@ -11,13 +11,13 @@ import {
   Mail,
   MapPin,
   MessageCircleMore,
-  Phone,
+  Phone, RefreshCcwIcon,
   User as UserIcon,
 } from 'lucide-react';
-import { getUser } from '@/utils/getUser.ts';
 import { useUserContext } from '@/useContexts/useContextUsers.ts';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.tsx';
+import { getUser } from '@/utils';
+import { useNavigate, useParams } from '@tanstack/react-router';
 
 interface IUserAccordion {
   contact: boolean;
@@ -27,9 +27,9 @@ interface IUserAccordion {
 }
 
 const UserSidebar = () => {
-  const { users } = useUserContext();
+  const { users, getUsers } = useUserContext();
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { userId } = useParams({ from: '/users/$userId' });
   const [openSections, setOpenSections] = useState<IUserAccordion>({
     contact: false,
     address: false,
@@ -43,11 +43,12 @@ const UserSidebar = () => {
       <div className="max-w-7xl mx-auto text-center py-16">
         <h1 className="text-white text-4xl font-light mb-4">User not found</h1>
         <Button
-          onClick={() => navigate('/users')}
+          onClick={async () => await getUsers()}
           variant="outline"
           className="bg-transparent text-white"
         >
-          Back to Users
+          <RefreshCcwIcon />
+          Refresh
         </Button>
       </div>
     );
@@ -241,24 +242,25 @@ const UserSidebar = () => {
               className={`space-y-2 text-sm overflow-hidden transition-all duration-300 ${openSections.posts ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div
-                onClick={() => navigate('/')}
+                onClick={() => navigate({
+                  to:'/'
+                })}
                 className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-cyan-500/10 transition-all"
               >
                 <p className="text-white font-semibold">📄 All posts</p>
               </div>
-
               <div
-                onClick={() => navigate(``)}
+                onClick={() => navigate({ to:`/users/${userId}/posts` })}
                 className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-cyan-500/10 transition-all"
               >
-                <p className="text-white font-semibold">✍️ My posts</p>
+                <p className="text-white font-semibold">✍️ {Number(userId) === 1 ? 'My posts' : 'User posts'}</p>
               </div>
             </div>
           </div>
           <div className="relative border-b border-white/10 pb-3 mb-3">
             <h3
               className="relative text-white text-base font-semibold flex items-center gap-2 cursor-pointer select-none transition-all hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-green-200 hover:to-teal-200 mb-3"
-              onClick={() => navigate(`todos`)}
+              onClick={() => navigate({ to:`/users/${userId}/todos` })}
             >
               <ListTodo className="size-4 text-green-400" />
               <span className="flex-1">Todos</span>
@@ -267,7 +269,7 @@ const UserSidebar = () => {
           <div className="relative">
             <h3
               className="relative text-white text-base font-semibold flex items-center gap-2 cursor-pointer select-none transition-all hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-yellow-200 hover:to-orange-200 mb-3"
-              onClick={() => navigate(`albums`)}
+              onClick={() => navigate({ to:`/users/${userId}/albums` })}
             >
               <Images className="size-4 text-yellow-400" />
               <span className="flex-1">Albums</span>
