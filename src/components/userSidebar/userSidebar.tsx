@@ -250,7 +250,7 @@ const UserSidebar = () => {
                 <p className="text-white font-semibold">📄 All posts</p>
               </div>
               <div
-                onClick={() => navigate({ to:`/users/${userId}/posts` })}
+                onClick={() => navigate({ to: `/users/${userId}` })}
                 className="cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-cyan-500/10 transition-all"
               >
                 <p className="text-white font-semibold">✍️ {Number(userId) === 1 ? 'My posts' : 'User posts'}</p>
