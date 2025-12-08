@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { AlertCircleIcon } from 'lucide-react';
 
 interface Props {
-  message?: string;
+  message: string;
   type?: 'addPost' | 'deletePost' | 'editPost' | 'deleteComment' | 'addPhoto' | 'editPhoto';
 }
 

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Label } from '@/components/ui/label.tsx';
 import { Send, Type } from 'lucide-react';
 import { Input } from '@/components/ui/input.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import type { IAlbum } from '@/types/albumTypes.ts';
+import { useForm } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   editAlbumFunction: (album: IAlbum) => void;
@@ -14,25 +16,21 @@ interface Props {
 }
 
 const EditAlbum:React.FC<Props> = ({ editAlbumFunction, album, isEditLoading, closeEditForm }) => {
-  const [editAlbumForm, setEditAlbumForm] = useState<IAlbum>(album);
+  const { register, handleSubmit, formState: { errors }, clearErrors,  } = useForm<IAlbum>({
+    defaultValues: { ...album },
+  });
 
-  const onChangeFormData = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEditAlbumForm((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const albumSubmit = (data: IAlbum) => {
+    editAlbumFunction({ ...data });
+
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
   };
 
-  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    editAlbumFunction(editAlbumForm);
-  };
   return (
     <div className="w-full">
-      <form onSubmit={handleCommentSubmit} className="space-y-2">
+      <form onSubmit={handleSubmit(albumSubmit)} className="space-y-2">
         <div className="space-y-2 w-[100%]">
           <Label
             htmlFor="name"
@@ -42,16 +40,16 @@ const EditAlbum:React.FC<Props> = ({ editAlbumFunction, album, isEditLoading, cl
             Title
           </Label>
           <Input
-            id="name"
             type="text"
-            name="title"
-            value={editAlbumForm.title}
-            onChange={onChangeFormData}
+            { ...register('title', { required: 'Title is a required field!' }) }
             placeholder="Title"
-            required
             className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 w-[100%]"
           />
         </div>
+        {errors.title && <FormErrorAlert
+          title={errors.title.message ?? ''}
+          message='Please fill in this field'
+        />}
         <div className="flex gap-3 justify-end pt-2">
           <Button
             onClick={closeEditForm}

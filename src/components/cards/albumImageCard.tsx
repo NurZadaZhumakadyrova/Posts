@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import type { IPhoto } from '@/types/photoTypes.ts';
 import { ImageIcon, Trash2, Pencil } from 'lucide-react';
 import ConfirmModal from '@/components/modal/confirmModal.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import EditPhotoForm from '@/components/forms/editPhotoForm.tsx';
 import { useParams } from '@tanstack/react-router';
-import { useAddPhoto, useDeletePhoto } from '@/app/hooks';
+import { useUpdatePhoto, useDeletePhoto } from '@/app/hooks';
 
 interface Props {
   photo: IPhoto;
@@ -18,7 +18,7 @@ const AlbumImageCard: React.FC<Props> = ({ photo }) => {
   const [isEditAlert, setIsEditAlert] = useState<boolean>(false);
   const { userId } = useParams({ from: '/users/$userId' });
   const { mutate: deletePhotoMutation, isPending: deleteLoading } = useDeletePhoto();
-  const { mutate: editPhotoMutation, isPending: editLoading } = useAddPhoto();
+  const { mutate: editPhotoMutation, isPending: editLoading } = useUpdatePhoto();
 
   const deletePhoto = async () => {
     deletePhotoMutation(photo.id, {

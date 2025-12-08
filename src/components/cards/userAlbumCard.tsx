@@ -3,7 +3,7 @@ import type { IAlbum } from '@/types/albumTypes.ts';
 import { Folder, Image, Pencil, X } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import EditAlbum from '@/components/forms/editAlbum.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import ConfirmModal from '@/components/modal/confirmModal.tsx';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useDeleteAlbum } from '@/app/hooks';

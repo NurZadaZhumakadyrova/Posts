@@ -11,9 +11,11 @@ import { FileText, Send } from 'lucide-react';
 import { Label } from '@/components/ui/label.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import React, { useState } from 'react';
+import React from 'react';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import type { ApiTodo } from '@/types/todoTypes.ts';
+import { useForm } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   openModal: boolean;
@@ -34,20 +36,18 @@ const TodoForm: React.FC<Props> = ({
   todoFunction,
   loading,
 }) => {
-  const [formData, setFormData] = useState<ApiTodo>(initialState);
-
-  const handelChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    todoFunction(formData);
-    setFormData(initialState);
+  const { register, handleSubmit, formState: { errors }, clearErrors, reset } = useForm({
+    defaultValues: { ...initialState },
+  });
+  
+  const taskSubmit = (data: ApiTodo) => {
+    todoFunction(data);
+    
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
+    
+    reset({ ...initialState });
   };
 
   return (
@@ -56,7 +56,7 @@ const TodoForm: React.FC<Props> = ({
         <div className="relative rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 shadow-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03] pointer-events-none" />
 
-          <form onSubmit={handleSubmit} className="relative">
+          <form onSubmit={handleSubmit(taskSubmit)} className="relative">
             <DialogHeader className="p-6 pb-4">
               <div className="flex items-center gap-3 mb-3">
                 <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200">
@@ -78,16 +78,16 @@ const TodoForm: React.FC<Props> = ({
                   Title
                 </Label>
                 <Textarea
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handelChange}
+                  { ...register( 'title', { required: 'Task is a required field!' } )}
                   placeholder="Enter your task..."
-                  required
                   rows={8}
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 resize-none"
                 />
               </div>
+              {errors.title && <FormErrorAlert
+                title={errors.title.message ?? ''}
+                message='Please fill in this field'
+              />}
             </div>
 
             <DialogFooter className="p-6 pt-4 border-t border-white/10 flex gap-3">

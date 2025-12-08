@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import UserTodoCard from '@/components/cards/userTodoCard.tsx';
 import TodoForm from '@/components/forms/todoForm.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import { SquarePlus } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger, } from '@/components/ui/tooltip.tsx';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
@@ -134,7 +134,7 @@ const UserTodos = () => {
                         <SquarePlus className="size-5"/>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="">
+                    <TooltipContent className="bg-black/90 text-white">
                       <p>Add new task</p>
                     </TooltipContent>
                   </Tooltip>

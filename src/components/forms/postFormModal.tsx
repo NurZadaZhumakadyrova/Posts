@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogClose,
@@ -13,8 +13,10 @@ import { Label } from '@/components/ui/label.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
-import { FileEdit, Send, Sparkles, Type, FileText } from 'lucide-react';
+import { FileEdit, FileText, Send, Sparkles, Type } from 'lucide-react';
 import type { ApiPost } from '@/types/postTypes.ts';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   openModal: boolean;
@@ -39,24 +41,17 @@ const PostFormModal: React.FC<Props> = ({
   onOpenChange,
   isEdit,
 }) => {
-  const [formData, setFormData] = useState<ApiPost>(editPost);
+  const { register, handleSubmit, formState: { errors }, clearErrors, reset } = useForm<ApiPost>({
+    defaultValues: { ...editPost }
+  });
 
-  const handelChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    postFunction({ ...formData });
-
+  const sendData: SubmitHandler<ApiPost> = (data) => {
+    postFunction({ ...data });
     if (!isEdit) {
-      setFormData(initialState);
+      reset({ ...initialState });
+    }
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
     }
   };
 
@@ -66,7 +61,7 @@ const PostFormModal: React.FC<Props> = ({
         <div className="relative rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 shadow-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03] pointer-events-none" />
 
-          <form onSubmit={handleSubmit} className="relative">
+          <form onSubmit={handleSubmit(sendData)} className="relative">
             <DialogHeader className="p-6 pb-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/20">
@@ -98,15 +93,25 @@ const PostFormModal: React.FC<Props> = ({
                   Title
                 </Label>
                 <Input
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handelChange}
+                  { ...register(
+                    'title',
+                    {
+                      required: 'Post title is a required field!',
+                      minLength: {
+                        value: 5,
+                        message: 'Min length 5'
+                      },
+                    }
+                  )}
                   placeholder="Enter an engaging title..."
-                  required
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 h-11"
                 />
               </div>
+
+              {errors.title && <FormErrorAlert
+                title={errors.title.message ?? ''}
+                message='Please fill in this field'
+              />}
 
               <div className="space-y-2">
                 <Label
@@ -117,16 +122,16 @@ const PostFormModal: React.FC<Props> = ({
                   Content
                 </Label>
                 <Textarea
-                  id="body"
-                  name="body"
-                  value={formData.body}
-                  onChange={handelChange}
+                  { ...register('body', { required: 'This field is required!' }) }
                   placeholder="Share your thoughts and ideas..."
-                  required
                   rows={8}
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 resize-none"
                 />
               </div>
+              {errors.body && <FormErrorAlert
+                title={errors.body.message ?? ''}
+                message='Please fill in this field'
+              />}
             </div>
 
             <DialogFooter className="p-6 pt-4 border-t border-white/10 flex gap-3">

@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, } from '@/components/ui/toolti
 import { FolderPlus } from 'lucide-react';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
 import AlbumForm from '@/components/forms/albumForm.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import { useUserContext } from '@/useContexts/useContextUsers.ts';
 import { useAddAlbum, useAlbums, useUpdateAlbum } from '@/app/hooks';
 import { useParams } from '@tanstack/react-router';
@@ -105,7 +105,7 @@ const UserAlbums = () => {
                         <FolderPlus className="size-5"/>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="">
+                    <TooltipContent className="bg-black/90 text-white">
                       <p>Add new album</p>
                     </TooltipContent>
                   </Tooltip>

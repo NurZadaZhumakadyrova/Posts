@@ -5,6 +5,8 @@ import { Spinner } from '@/components/ui/spinner.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import type { ITodo } from '@/types/todoTypes.ts';
 import { useParams } from '@tanstack/react-router';
+import { useForm } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   todo: ITodo;
@@ -21,7 +23,9 @@ const UserTodoCard: React.FC<Props> = ({
   editTodo,
   editLoading,
 }) => {
-  const [formData, setFormData] = useState<ITodo>(todo);
+  const { handleSubmit, register, formState: { errors }, clearErrors, resetField } = useForm({
+    defaultValues: { ...todo },
+  });
   const [edit, setEdit] = useState<boolean>(false);
   const { userId } = useParams({ from: '/users/$userId' });
 
@@ -31,25 +35,16 @@ const UserTodoCard: React.FC<Props> = ({
     editTodo(updatedTodo);
   };
 
-  const handelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  const taskSubmit = (data: ITodo) => {
+    editTodo({ ...data });
 
-  const handelSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    editTodo(formData);
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
+
     setTimeout(() => {
       setEdit(false);
-      setFormData({
-        title: '',
-        completed: todo.completed,
-        id: todo.id,
-        userId: todo.userId,
-      });
+      resetField('title');
     }, 1500);
   };
 
@@ -65,18 +60,21 @@ const UserTodoCard: React.FC<Props> = ({
 
       {edit && Number(userId) === 1 ? (
         <form
-          onSubmit={handelSubmit}
+          onSubmit={handleSubmit(taskSubmit)}
           className="relative flex items-center justify-between gap-3"
         >
-          <Input
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handelChange}
-            placeholder="Enter an engaging title..."
-            required
-            className="w-[90%] bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400"
-          />
+          <div className='w-full'>
+            <Input
+              id="title"
+              { ...register('title', { required: 'Task is a required field!' }) }
+              placeholder="Enter an engaging title..."
+              className={`bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 ${errors.title && errors.title.message && errors.title.message.length > 0 ? 'mb-3' : ''}`}
+            />
+            {errors.title && <FormErrorAlert
+              title={errors.title.message ?? ''}
+              message='Please fill in this field'
+            />}
+          </div>
           <div className="ml-2 flex">
             <Button
               disabled={editLoading}
@@ -92,7 +90,10 @@ const UserTodoCard: React.FC<Props> = ({
               )}
             </Button>
             <Button
-              onClick={() => setEdit(false)}
+              onClick={() => {
+                setEdit(false);
+                clearErrors();
+              }}
               variant="outline"
               size="icon"
               type="button"

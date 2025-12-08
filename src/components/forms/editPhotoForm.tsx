@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -9,11 +9,13 @@ import {
   DialogTitle
 } from '@/components/ui/dialog.tsx';
 import { Label } from '@/components/ui/label.tsx';
-import { Image as ImageIcon, Link as LinkIcon, Paperclip, Save, Type } from 'lucide-react';
+import { Image as ImageIcon, Link as LinkIcon, Save, Type, Upload } from 'lucide-react';
 import { Input } from '@/components/ui/input.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import type { IPhoto } from '@/types/photoTypes.ts';
+import { useForm, useWatch } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   openModal: boolean;
@@ -24,31 +26,41 @@ interface Props {
 }
 
 const EditPhotoForm: React.FC<Props> = ({ openModal, onOpenChange, loading, photo, editPhotoFunction }) => {
-  const [formData, setFormData] = useState<IPhoto>(photo);
+  const { handleSubmit, register, formState: { errors }, clearErrors, control, setValue, reset } = useForm<IPhoto>({
+    defaultValues: { ...photo },
+  });
 
-  const handelChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  useEffect(() => {
+    if (openModal) {
+      reset({ ...photo });
+    }
+  }, [openModal, photo, reset]);
+
+  const photoSubmit = (data: IPhoto) => {
+    editPhotoFunction({ ...data });
+
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
   };
+
+  const url: string = useWatch({
+    control,
+    name: 'url',
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     const fileUrl = URL.createObjectURL(file);
+    setValue('url', fileUrl, { shouldValidate: true });
 
-    setFormData(prev => ({
-      ...prev,
-      url: fileUrl,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    editPhotoFunction(formData);
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
   };
 
   return (
@@ -56,8 +68,7 @@ const EditPhotoForm: React.FC<Props> = ({ openModal, onOpenChange, loading, phot
       <DialogContent className="sm:max-w-[600px] text-white overflow-hidden border-0 p-0">
         <div className="relative rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 shadow-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03] pointer-events-none" />
-
-          <form onSubmit={handleSubmit} className="relative">
+          <form onSubmit={handleSubmit(photoSubmit)} className="relative">
             <DialogHeader className="p-6 pb-4">
               <div className="flex items-center gap-3 mb-3">
                 <DialogTitle
@@ -70,16 +81,16 @@ const EditPhotoForm: React.FC<Props> = ({ openModal, onOpenChange, loading, phot
               </DialogDescription>
             </DialogHeader>
 
-            <div className="px-6 pb-6 space-y-5">
+            <div className="px-6 pb-6 space-y-5 max-h-[50vh] overflow-y-auto">
               <div className="space-y-2">
                 <Label className="text-white/90 flex items-center gap-2 font-medium">
                   <ImageIcon className="size-4 text-purple-300"/>
-                  Current Image
+                  {url !== photo.url ? 'New Image Preview' : 'Current Image'}
                 </Label>
                 <div className="relative w-full h-48 rounded-xl overflow-hidden bg-black/40 border border-white/20">
                   <img
-                    src={formData.url}
-                    alt={formData.title}
+                    src={url || photo.url}
+                    alt={photo.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -95,31 +106,35 @@ const EditPhotoForm: React.FC<Props> = ({ openModal, onOpenChange, loading, phot
                 </Label>
                 <Input
                   id="title"
-                  name="title"
                   type="text"
-                  value={formData.title}
-                  onChange={handelChange}
+                  { ...register('title', { required: 'Title is a required field!' }) }
                   placeholder="Enter photo title..."
-                  required
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 h-11"
                 />
               </div>
+              {errors.title && <FormErrorAlert
+                title={errors.title.message ?? ''}
+                message='Please fill in this field'
+              />}
 
               <div className="space-y-2">
                 <Label
-                  htmlFor="url"
+                  htmlFor="photoFile"
                   className="text-white/90 flex items-center gap-2 font-medium"
                 >
-                  <Paperclip className="size-4 text-purple-300"/>
-                  Image URL
+                  <Upload className="size-4 text-purple-300"/>
+                  Upload New Photo
                 </Label>
                 <Input
-                  id="url"
-                  name="url"
+                  id="photoFile"
                   type="file"
                   onChange={handleFileChange}
+                  accept="image/*"
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 h-11"
                 />
+                <p className="text-xs text-white/50">
+                  Choose a new image to replace the current one
+                </p>
               </div>
               <div className="space-y-2">
                 <Label
@@ -130,11 +145,8 @@ const EditPhotoForm: React.FC<Props> = ({ openModal, onOpenChange, loading, phot
                   Thumbnail URL
                 </Label>
                 <Input
-                  id="thumbnailUrl"
-                  name="thumbnailUrl"
+                  { ...register('thumbnailUrl') }
                   type="text"
-                  value={(formData.url).split('/').reverse()[0]}
-                  onChange={handelChange}
                   placeholder="Enter thumbnail URL..."
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 h-11"
                 />

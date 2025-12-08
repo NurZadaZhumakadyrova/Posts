@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogClose,
@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button.tsx';
 import { Spinner } from '@/components/ui/spinner.tsx';
 import type { ApiAlbum } from '@/types/albumTypes.ts';
 import { Input } from '@/components/ui/input.tsx';
+import { useForm } from 'react-hook-form';
+import FormErrorAlert from '@/components/alert/formErrorAlert.tsx';
 
 interface Props {
   openModal: boolean;
@@ -28,28 +30,27 @@ const initialState: ApiAlbum = {
 };
 
 const AlbumForm:React.FC<Props> = ({ openModal,  onOpenChange, albumFunction, loading }) => {
-  const [formData, setFormData] = useState(initialState);
+  const { register, handleSubmit, formState: { errors }, clearErrors, reset } = useForm<ApiAlbum>({
+    defaultValues: { ...initialState },
+  });
 
-  const handelChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const albumSubmit = (data: ApiAlbum) => {
+    albumFunction({ ...data });
+
+    if (Object.keys(errors).length > 0) {
+      clearErrors();
+    }
+
+    reset({ ...initialState });
   };
 
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    albumFunction(formData);
-    setFormData(initialState);
-  };
   return (
     <Dialog open={openModal} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] text-white overflow-hidden border-0 p-0">
         <div className="relative rounded-2xl bg-gradient-to-br from-black/70 via-black/80 to-black/70 border border-white/20 shadow-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-purple-500/[0.03] to-pink-500/[0.03] pointer-events-none" />
 
-          <form onSubmit={handleSubmit} className="relative">
+          <form onSubmit={handleSubmit(albumSubmit)} className="relative">
             <DialogHeader className="p-6 pb-4">
               <div className="flex items-center gap-3 mb-3">
                 <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200">
@@ -71,15 +72,15 @@ const AlbumForm:React.FC<Props> = ({ openModal,  onOpenChange, albumFunction, lo
                   Title
                 </Label>
                 <Input
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handelChange}
+                  { ...register( 'title', { required: 'Task is a required field!' }) }
                   placeholder="Enter an album title..."
-                  required
                   className="bg-white/10 border-white/30 text-white placeholder:text-white/40 focus:border-purple-400 focus:ring-purple-400 h-11"
                 />
               </div>
+              {errors.title && <FormErrorAlert
+                title={errors.title.message ?? ''}
+                message='Please fill in this field'
+              />}
             </div>
             <DialogFooter className="p-6 pt-4 border-t border-white/10 flex gap-3">
               <DialogClose asChild>

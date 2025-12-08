@@ -3,7 +3,7 @@ import { MessageSquare, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import UserPostCommentCard from '@/components/cards/userPostCommentCard.tsx';
 import PostFormModal from '@/components/forms/postFormModal.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import ConfirmModal from '@/components/modal/confirmModal.tsx';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
 import EmptyComments from '@/components/empties/emptyComments.tsx';

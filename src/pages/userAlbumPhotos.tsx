@@ -25,7 +25,7 @@ import { getRandom } from '@/utils';
 import { useAddPhoto, useAlbum, usePhotos } from '@/app/hooks';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import type { ApiPhoto } from '@/types/photoTypes.ts';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import ErrorAlert from '@/components/alert/errorAlert.tsx';
 
 const UserAlbumPhotos = () => {
@@ -127,7 +127,7 @@ const UserAlbumPhotos = () => {
                       <FolderPlus className="size-5"/>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="">
+                  <TooltipContent className="bg-black/90 text-white">
                     <p>Add photo</p>
                   </TooltipContent>
                 </Tooltip>

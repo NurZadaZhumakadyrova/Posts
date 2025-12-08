@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Mail, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
-import EditCommentForm from '@/components/forms/editCommentForm.tsx';
-import type { IComment } from '@/types/commentTypes.ts';
+import type { ApiComment, IComment } from '@/types/commentTypes.ts';
 import { getColor, getInitials } from '@/utils';
+import CommentForm from '@/components/forms/commentForm.tsx';
 
 interface Props {
   comment: IComment;
   index: number;
-  editCommentPost: (editCommit: IComment) => void;
+  commentFunction: (comment: ApiComment | IComment) => void;
   isEditLoading: boolean;
   userPost: boolean;
 }
@@ -17,7 +17,7 @@ interface Props {
 const CommentCard: React.FC<Props> = ({
   comment,
   index,
-  editCommentPost,
+  commentFunction,
   isEditLoading,
   userPost,
 }) => {
@@ -59,33 +59,43 @@ const CommentCard: React.FC<Props> = ({
               </AvatarFallback>
             </Avatar>
           </div>
-          {(isEditComment) ? (
-            <EditCommentForm
-              closeEditForm={() => setIsEditComment(false)}
-              comment={comment}
-              isEditLoading={isEditLoading}
-              editCommentPost={editCommentPost}
-            />
-          ) : (
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <div>
-                  <h4 className="hyphens-auto pr-6 text-white font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-200 group-hover:to-pink-200 transition-all">
-                    {comment.name}
-                  </h4>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Mail className="size-3 text-white/40" />
-                    <span className="text-xs text-white/50 truncate">
-                      {comment.email}
-                    </span>
+          <div className="flex-1 min-w-0">
+            {(isEditComment) ? (
+              <CommentForm
+                isEdit
+                commentFunction={commentFunction}
+                closeForm={() => setIsEditComment(false)}
+                comment={comment as IComment}
+                editLoading={isEditLoading}
+              />
+              // <EditCommentForm
+              //   closeEditForm={() => setIsEditComment(false)}
+              //   comment={comment}
+              //   isEditLoading={isEditLoading}
+              //   editCommentPost={editCommentPost}
+              // />
+            ) : (
+              <>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <div>
+                    <h4
+                      className="hyphens-auto pr-6 text-white font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-200 group-hover:to-pink-200 transition-all">
+                      {comment.name}
+                    </h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Mail className="size-3 text-white/40"/>
+                      <span className="text-xs text-white/50 truncate">
+                        {comment.email}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <p className="text-white/80 group-hover:text-white/90 leading-relaxed mt-2 text-sm transition-colors">
-                {comment.body}
-              </p>
-            </div>
-          )}
+                <p className="text-white/80 group-hover:text-white/90 leading-relaxed mt-2 text-sm transition-colors">
+                  {comment.body}
+                </p>
+              </>
+            )}
+          </div>
         </div>
         {userPost ? null :
           <Button
@@ -95,8 +105,8 @@ const CommentCard: React.FC<Props> = ({
             type="button"
             className={`absolute top-2 right-2 size-7 rounded-full border-none bg-white/5 hover:bg-white-500/20 text-white/50 hover:text-white-400 transition-all opacity-0 group-hover:opacity-100 ${isEditComment ? 'hidden' : ''}`}
           >
-            <Pencil className="size-3.5" />
-          </Button> 
+            <Pencil className="size-3.5"/>
+          </Button>
         }
       </div>
     </div>

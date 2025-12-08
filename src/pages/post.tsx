@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { ChevronDown, ChevronUp, MessageCircle, Send } from 'lucide-react';
 import CommentForm from '@/components/forms/commentForm.tsx';
 import CommentCard from '@/components/cards/commentCard.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import { useUserContext } from '@/useContexts/useContextUsers.ts';
 import Loading from '@/components/loading/loading.tsx';
 import EmptyPost from '@/components/empties/emptyPost.tsx';
@@ -27,31 +27,29 @@ const Post = () => {
   const addCommentMutation = useAddNewComment();
   const updateCommentMutation = useUpdateComment();
 
-  const commentFunction = async (comment: ApiComment) => {
+  const commentFunction = (comment: ApiComment | IComment) => {
     if (postId) {
-      comment.postId = Number(postId);
-      addCommentMutation.mutate(comment, {
-        onSuccess: () => {
-          setIsAddCommentAlert(true);
-          setShowCommentForm(false);
-          setTimeout(() => {
-            setIsAddCommentAlert(false);
-          }, 3500);
-        },
-      });
-    }
-  };
-
-  const editCommentPost = async (editComment: IComment) => {
-    if (postId) {
-      updateCommentMutation.mutate(editComment, {
-        onSuccess: () => {
-          setIsEditCommentAlert(true);
-          setTimeout(() => {
-            setIsEditCommentAlert(false);
-          }, 3000);
-        },
-      });
+      if (showCommentForm) {
+        comment.postId = Number(postId);
+        addCommentMutation.mutate(comment as ApiComment, {
+          onSuccess: () => {
+            setIsAddCommentAlert(true);
+            setShowCommentForm(false);
+            setTimeout(() => {
+              setIsAddCommentAlert(false);
+            }, 3500);
+          },
+        });
+      } else {
+        updateCommentMutation.mutate(comment as IComment, {
+          onSuccess: () => {
+            setIsEditCommentAlert(true);
+            setTimeout(() => {
+              setIsEditCommentAlert(false);
+            }, 3000);
+          },
+        });
+      }
     }
   };
 
@@ -134,7 +132,7 @@ const Post = () => {
                     {showCommentForm && (
                       <CommentForm
                         commentFunction={commentFunction}
-                        loading={addCommentMutation.isPending}
+                        addLoading={addCommentMutation.isPending}
                         closeForm={() => setShowCommentForm(false)}
                       />
                     )}
@@ -154,12 +152,12 @@ const Post = () => {
                         ) : (
                           comments.map((comment, index) => (
                             <CommentCard
-                              editCommentPost={editCommentPost}
                               isEditLoading={updateCommentMutation.isPending}
                               key={comment.id}
                               comment={comment}
                               index={index}
                               userPost={post.userId === 1}
+                              commentFunction={commentFunction}
                             />
                           ))
                         )}

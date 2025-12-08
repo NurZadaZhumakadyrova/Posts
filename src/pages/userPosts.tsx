@@ -3,7 +3,7 @@ import { Spinner } from '@/components/ui/spinner.tsx';
 import UserPostCard from '@/components/cards/userPostCard.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import PostFormModal from '@/components/forms/postFormModal.tsx';
-import AlertGlobal from '@/components/alert/alert.tsx';
+import AlertGlobal from '@/components/alert/alertGlobal.tsx';
 import { Tooltip, TooltipContent, TooltipTrigger, } from '@/components/ui/tooltip.tsx';
 import { MessageCirclePlus } from 'lucide-react';
 import EmptyBlock from '@/components/empties/emptyBlock.tsx';
@@ -24,6 +24,7 @@ const UserPosts = () => {
 
   const addNewPost = (post: ApiPost) => {
     post.userId = Number(userId);
+    console.log(post);
     mutate({ ...post }, {
       onSuccess: () => {
         setIsModal(false);
@@ -61,7 +62,7 @@ const UserPosts = () => {
   return (
     <>
       {(isAlert && error === null) && <AlertGlobal type="isNewPost" />}
-      {(error && isErrorAlert) && <ErrorAlert error={error.message} type="addPost" />}
+      {(error && isErrorAlert) && <ErrorAlert message={error.message} type="addPost" />}
       {isModal && (
         <PostFormModal
           openModal={isModal}
@@ -108,7 +109,7 @@ const UserPosts = () => {
                       <MessageCirclePlus className="size-5"/>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="">
+                  <TooltipContent className="bg-black/90 text-white">
                     <p>Add new post</p>
                   </TooltipContent>
                 </Tooltip>
